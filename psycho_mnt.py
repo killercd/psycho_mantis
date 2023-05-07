@@ -12,8 +12,11 @@ from PyQt5.QtWidgets import (QApplication,
                              QRadioButton,
                              QTableWidget,
                              QTableWidgetItem,
-                             QDialog)
-
+                             QDialog,
+                             
+                             )
+from PyQt5.QtGui import QPalette, QColor
+from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QTextCursor
 from modules.netcat import ChatServer
 import os
@@ -80,6 +83,7 @@ class PopupDialogGenerateAgent(QDialog):
 class App(QWidget):
     def __init__(self):
         super().__init__()
+        
         self.title = 'Psycho mantis PDK (Payload Distribution Kit)'
         self.left = 0
         self.top = 0
@@ -337,12 +341,16 @@ exec(base64.b64decode(decrypted_message))
         vbox = QVBoxLayout()
         vbox.addWidget(tabs)
         self.setLayout(vbox)
-
+        palette = QPalette()
+        palette.setColor(QPalette.Window, QColor(192, 192, 192))
+        palette.setColor(QPalette.WindowText, Qt.black)
+        self.setPalette(palette)
         self.show()
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
+    app.setStyle('Windows')
     ex = App()
     
     sys.exit(app.exec_())
