@@ -13,8 +13,9 @@ from PyQt5.QtWidgets import (QApplication,
                              QTableWidget,
                              QTableWidgetItem,
                              QDialog,
-                             
-                             )
+                             QFileSystemModel,
+                             QTreeView)
+
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QTextCursor
@@ -113,6 +114,7 @@ class App(QWidget):
     def get_payloads(self, list_widget):
         files = os.listdir(self.payloads_folder)
         
+        
         for file in files:
             list_widget.addItems([file])
         
@@ -210,10 +212,23 @@ exec(base64.b64decode(decrypted_message))
 
         
         #PAYLOAD LISTS
-        self.payloads_list = QListWidget()
-        self.payloads_list = self.get_payloads(self.payloads_list)
-        form_crypt_layout.addRow(QLabel('Payloads:'), self.payloads_list)
+        # self.payloads_list = QListWidget()
+        # self.payloads_list = self.get_payloads(self.payloads_list)
         
+        self.payload_tree = QFileSystemModel()
+        self.payload_tree.setRootPath(os.path.expanduser(self.payloads_folder)) 
+        self.payload_f_tree = QTreeView()
+        self.payload_f_tree.setModel(self.payload_tree)
+        self.payload_f_tree.setRootIndex(self.payload_tree.index(os.path.expanduser(self.payloads_folder)))
+        self.payload_f_tree.setHeaderHidden(True)
+        self.payload_f_tree.setColumnHidden(1, True)
+        self.payload_f_tree.setColumnHidden(2, True)
+        self.payload_f_tree.setColumnHidden(3, True)
+
+
+        form_crypt_layout.addRow(QLabel('Payloads:'), self.payload_f_tree)
+        
+
         #PAYLOAD TYPE
         vbox_radio = QHBoxLayout()
         
