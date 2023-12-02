@@ -346,23 +346,21 @@ exec(base64.b64decode(decrypted_message))
         tabs = QTabWidget()
 
         
-        crypt_tab = self.payload_tab()
-        agent_tab = self.agent_tab()
+        # crypt_tab = self.payload_tab()
+        # agent_tab = self.agent_tab()
         
         #TABS
-        tabs.addTab(crypt_tab, 'Python Agent')
-        tabs.addTab(agent_tab, 'Output')
+        # tabs.addTab(crypt_tab, 'Python Agent')
+        # tabs.addTab(agent_tab, 'Output')
         #modules
-        chat_server_tab = ChatServer(self, tabs)
-        scannet_tab = ScannerWindow(self,tabs)
         
+        scanner_tab = ScannerWindow(self,tabs)
+        chat_server_tab = ChatServer(self, tabs)
+
         vbox = QVBoxLayout()
         vbox.addWidget(tabs)
         self.setLayout(vbox)
-        palette = QPalette()
-        palette.setColor(QPalette.Window, QColor(192, 192, 192))
-        palette.setColor(QPalette.WindowText, Qt.black)
-        self.setPalette(palette)
+      
         self.show()
 
 
